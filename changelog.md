@@ -1,3 +1,3 @@
-## 0.1 (2025-06-15)
+## 0.2 (2025-06-15)
 
-- Initial release.
+- Fixed github workflow.
