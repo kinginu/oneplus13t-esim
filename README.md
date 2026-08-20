@@ -8,14 +8,18 @@ Intended for eUICC-enabled physical SIM cards (5ber, eSTK.me, etc.).
 
 > **Internal eUICC does NOT work under the OxygenOS conversion.** The
 > Settings entry, the eSIM master toggle and the GPIO slot switch all
-> function (the toggle physically muxes SIM2 → internal eUICC), but the
-> 13s modem firmware/NV never enumerates the internal eUICC — the modem
-> reports `CARDSTATE_ABSENT` with an empty ATR/EID on physical slot 1, so
-> profile download fails at the metadata stage. This is a modem-side
-> (NV/EFS) limitation that no AP-side module can fix. Under ColorOS the
-> same chip enumerates fine (ORoaming profiles exist in the subscription
-> history). Leave the eSIM toggle OFF; turning it ON only disconnects
-> your physical SIM2.
+> function (the toggle physically muxes SIM2 → the internal NXP SN220U
+> eUICC), but with the mux switched the modem reads the internal eUICC and
+> gets `CARDSTATE_ABSENT` with an empty ATR/EID. Public reports show the
+> same failure when China OnePlus models are flashed to global ROM — the
+> internal eUICC behaves "as if removed" — so this is disabled/unprovisioned
+> **below the application processor** (modem NV, or a CN-board SN220 that
+> is not personalized) and no AP-side module can fix it. Leave the eSIM
+> toggle **OFF**; turning it ON only disconnects your physical SIM2.
+>
+> See [`docs/esim-hardware-analysis.md`](docs/esim-hardware-analysis.md)
+> for the full hardware/software breakdown (SN220U, the GPIO mux, the
+> secure-element evidence, and why EDL cannot help).
 
 <a href="https://www.buymeacoffee.com/kinginu" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 220px !important;" ></a>
 
