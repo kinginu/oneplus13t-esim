@@ -1,0 +1,11 @@
+# Expose the eSIM management entry in Settings (SIM & eSIM settings).
+#
+# OplusSimSettings (TeleService) only adds the "eSIM" preference when
+# ro.vendor.oplus.esim.support is 1 or 2 (EuiccDemand.getEsimDisplayType):
+#   0 (or undefined) = entry hidden
+#   1 = eSIM shares SIM2 slot via GPIO switching (ColorOS 13T style)
+#   2 = independent eUICC, no slot sharing
+# The OxygenOS 13s builds flashed onto the 13T leave the prop undefined,
+# so the entry never appears even though the Google LPA stack is present
+# and functional. 2 matches the working standard-LPA path on this device.
+ro.vendor.oplus.esim.support=2
