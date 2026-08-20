@@ -164,6 +164,9 @@ practical path.
   `UiccController.setRemovableEsimAsDefaultEuicc` (Android 13+), plus the
   card presenting the eUICC bit in its ATR:
   <https://github.com/GrapheneOS/platform_packages_services_Telephony/blob/main/src/com/android/phone/settings/RadioInfo.java>
+  For the eSTK.me ATR Mode setting itself, see the archived doc (the
+  original page has been removed):
+  <https://web.archive.org/web/20250405073044/https://docs.estk.me/stk/settings/atr/>
 
 ## Capability matrix (this unit)
 

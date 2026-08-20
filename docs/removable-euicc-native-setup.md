@@ -115,7 +115,9 @@ It should show the card's existing profiles and an **Add SIM** entry.
 
 ## References
 
-- eSTK.me docs — ATR Mode: <https://docs.estk.me/estk_me/stk/settings/atr-mode/index.html>
+- eSTK.me docs — **ATR Mode (archived; original page removed)**:
+  <https://web.archive.org/web/20250405073044/https://docs.estk.me/stk/settings/atr/>
+- eSTK.me docs — ATR Mode (live, may be unavailable): <https://docs.estk.me/estk_me/stk/settings/atr-mode/index.html>
 - eSTK.me docs — Android quickstart: <https://docs.estk.me/manual/quickstart/android/index.html>
 - eSTK.me docs — PC quickstart (recommends ATR=eUICC): <https://docs.estk.me/manual/quickstart/pc/index.html>
 - EasyEUICC FAQ (the "can't re-enable" trap): <https://easyeuicc.org/en/faq/>
