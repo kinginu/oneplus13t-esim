@@ -21,6 +21,12 @@ Intended for eUICC-enabled physical SIM cards (5ber, eSTK.me, etc.).
 > for the full hardware/software breakdown (SN220U, the GPIO mux, the
 > secure-element evidence, and why EDL cannot help).
 
+**The working eSIM path is a removable eUICC card (eSTK.me / 5ber / 9eSIM)
+in the physical SIM2 slot.** After switching the card's ATR Mode to eUICC it
+is managed **natively from the stock Settings eSIM screen** (verified on
+device). See
+[`docs/removable-euicc-native-setup.md`](docs/removable-euicc-native-setup.md).
+
 <a href="https://www.buymeacoffee.com/kinginu" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 220px !important;" ></a>
 
 ## Background

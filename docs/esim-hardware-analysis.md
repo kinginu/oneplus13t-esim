@@ -170,7 +170,12 @@ practical path.
 | Target                    | Stock Settings (System LPA)                 | EasyEUICC |
 |---------------------------|---------------------------------------------|-----------|
 | Internal eUICC (SN220U)   | No — modem returns CARDSTATE_ABSENT         | No        |
-| Removable eUICC (eSTK.me) | Likely yes once card advertises eUICC ATR   | Yes       |
+| Removable eUICC (eSTK.me) | **Yes** — after ATR Mode → eUICC (verified) | Yes       |
+
+The removable-eUICC path is confirmed working: switching the eSTK.me ATR
+Mode to eUICC flips `mIsEuicc` to true with a valid EID, and the stock Google
+LPA then lists and manages the card's profiles. Step-by-step:
+[`removable-euicc-native-setup.md`](removable-euicc-native-setup.md).
 
 ## Key device facts to re-verify
 
