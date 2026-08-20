@@ -1,7 +1,7 @@
 id=oneplus13t-esim
 name=eSIM Settings Enabler
-version=v0.2
-versionCode=2
+version=v0.3
+versionCode=3
 author=kinginu
 description=Exposes the eSIM management entry in Settings (SIM & eSIM settings) on OxygenOS-converted OnePlus 13T. Works with the internal eUICC and eUICC-enabled physical SIM cards (5ber, eSTK.me).
 updateJson=https://raw.githubusercontent.com/kinginu/oneplus13t-esim/main/update.json
