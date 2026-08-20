@@ -4,8 +4,18 @@ A Magisk/KernelSU module that exposes the native **eSIM management entry**
 (Settings > Mobile network > SIM & eSIM settings > eSIM) on a OnePlus 13T
 converted to OxygenOS (13s firmware).
 
-Works with the 13T's internal eUICC as well as eUICC-enabled physical SIM
-cards (5ber, eSTK.me, etc.).
+Intended for eUICC-enabled physical SIM cards (5ber, eSTK.me, etc.).
+
+> **Internal eUICC does NOT work under the OxygenOS conversion.** The
+> Settings entry, the eSIM master toggle and the GPIO slot switch all
+> function (the toggle physically muxes SIM2 → internal eUICC), but the
+> 13s modem firmware/NV never enumerates the internal eUICC — the modem
+> reports `CARDSTATE_ABSENT` with an empty ATR/EID on physical slot 1, so
+> profile download fails at the metadata stage. This is a modem-side
+> (NV/EFS) limitation that no AP-side module can fix. Under ColorOS the
+> same chip enumerates fine (ORoaming profiles exist in the subscription
+> history). Leave the eSIM toggle OFF; turning it ON only disconnects
+> your physical SIM2.
 
 <a href="https://www.buymeacoffee.com/kinginu" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 220px !important;" ></a>
 
