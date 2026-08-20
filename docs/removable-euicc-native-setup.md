@@ -15,16 +15,20 @@ the eUICC capability in its ATR.
 Verified on device: after switching the eSTK.me ATR Mode to **eUICC**, the
 card is reported as `mIsEuicc=true` with a valid `mEid`, and the stock Google
 LPA (`Settings → Mobile network → SIM & eSIM settings → eSIM`, i.e.
-`CurrentProfileListActivity`) lists and manages the card's profiles and
-offers **Add SIM**.
+`CurrentProfileListActivity`) lists and manages the card's profiles
+(enable/disable/delete). **Downloading a new profile natively still fails**
+(framework limitation, see below) — keep using EasyEUICC for downloads.
 
 ## What this achieves
 
 | Before (Generic ATR) | After (eUICC ATR) |
 |----------------------|-------------------|
 | Card seen as a plain SIM (`mIsEuicc=false`, empty EID) | Card seen as an eUICC (`mIsEuicc=true`, EID present) |
-| Stock Settings cannot download/manage profiles | Stock Settings eSIM screen lists profiles + **Add SIM** |
-| Profiles only via EasyEUICC / lpac | Native management (EasyEUICC still works too) |
+| Stock Settings ignores the card | Stock Settings eSIM screen **lists and manages** the card's profiles |
+| Profiles only via EasyEUICC / lpac | Native enable/disable/delete (EasyEUICC still works too) |
+
+**Note:** native **downloading** of a *new* profile still does not work —
+that stays on EasyEUICC. See "Limitation" below for why.
 
 ## Prerequisites
 
@@ -97,6 +101,57 @@ adb shell am start -a android.telephony.euicc.action.MANAGE_EMBEDDED_SUBSCRIPTIO
 It should show the card's existing profiles and an **Add SIM** entry.
 
 ![screenshot: stock Settings eSIM screen listing eSTK.me profiles]
+
+## Limitation: stock Settings can MANAGE but cannot DOWNLOAD
+
+Confirmed on device. After ATR Mode → eUICC, the stock Google LPA lists,
+enables, disables and deletes existing profiles, but **downloading a new
+profile fails** with "Something went wrong". The card and network are fine —
+EasyEUICC downloads to the same card without issue.
+
+Root cause (from `EuiccGoogle` logs):
+
+```
+NetworkCache.getEidForSlot: preferred Euicc slotId is 1
+NetworkCache.getEidForSlot: Cannot find EID for slotId: 1
+EuiccServiceImpl.getEidFromSlotId: Failed to get EID for slotId: 1
+  com.android.euicc.service.EuiccServiceException: Didn't find EID for slotId: 1 (Error Code=0x20009)
+onGetDownloadableSubscriptionMetadata errorCode: 33554432   (ERROR_EUICC_MISSING / generic)
+```
+
+The download flow begins by reading the eUICC's **EID** (it is sent to the
+SM-DP+). The Google LPA reads the EID from the framework's **public euicc
+API cache** (`NetworkCache.getEidForSlot`, backed by `UiccSlotInfo.getEid()`),
+**not** by a live APDU to the card. On this device:
+
+- OPPO's internal telephony (`SMSVC` `UiccSlot`) **does** hold the EID
+  (`mIsEuicc=true, mEid=<present>`), and OMAPI/EasyEUICC read it fine.
+- But OPPO's framework **does not publish that EID into the public euicc
+  API** that the Google LPA reads, so `getEidForSlot` returns "Cannot find
+  EID" and the download aborts before contacting the SM-DP+.
+
+This is a **framework-level limitation**, not a card or APDU problem:
+
+- The card's **ISD-R Mode** (AUX vs GSMA) makes no difference — tested both,
+  identical `0x20009`. AUX exposes ISD-R over OMAPI (app LPAs); GSMA exposes
+  it over the baseband — but the failure is in the *EID lookup cache*, which
+  neither changes. **Keep ISD-R Mode = AUX so EasyEUICC keeps working;**
+  GSMA gains nothing here and can hide the card from OMAPI apps.
+- The Google LPA already selects the removable slot (`preferred Euicc
+  slotId is 1`), so the `*#*#4636#*#*` "Removable eSIM as default" toggle is
+  not expected to help either.
+
+This is the same reason OpenEUICC/EasyEUICC exist: Google's LPA does not
+properly support removable eUICCs for downloads.
+
+**Practical split:**
+
+| Operation | Stock Settings (Google LPA) | EasyEUICC |
+|-----------|-----------------------------|-----------|
+| List / enable / disable / delete existing profiles | Yes | Yes |
+| **Download a new profile** | **No** (`getEidForSlot` → 0x20009) | **Yes** |
+
+So: **download with EasyEUICC, switch/manage with stock Settings.**
 
 ## ⚠️ Important caveats
 

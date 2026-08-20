@@ -170,14 +170,18 @@ practical path.
 
 ## Capability matrix (this unit)
 
-| Target                    | Stock Settings (System LPA)                 | EasyEUICC |
-|---------------------------|---------------------------------------------|-----------|
-| Internal eUICC (SN220U)   | No — modem returns CARDSTATE_ABSENT         | No        |
-| Removable eUICC (eSTK.me) | **Yes** — after ATR Mode → eUICC (verified) | Yes       |
+| Target                    | Stock Settings — manage | Stock Settings — download | EasyEUICC |
+|---------------------------|-------------------------|---------------------------|-----------|
+| Internal eUICC (SN220U)   | No (CARDSTATE_ABSENT)   | No                        | No        |
+| Removable eUICC (eSTK.me) | **Yes** (ATR → eUICC)   | **No** (0x20009, framework)| Yes       |
 
-The removable-eUICC path is confirmed working: switching the eSTK.me ATR
-Mode to eUICC flips `mIsEuicc` to true with a valid EID, and the stock Google
-LPA then lists and manages the card's profiles. Step-by-step:
+The removable-eUICC path is confirmed: switching the eSTK.me ATR Mode to
+eUICC flips `mIsEuicc` to true with a valid EID, and the stock Google LPA
+then **lists and manages** the card's profiles. **Downloading** a new
+profile still fails — OPPO's framework does not publish the removable
+eUICC's EID into the public euicc API the Google LPA reads
+(`getEidForSlot` → `0x20009`), independent of the card's ISD-R Mode. Use
+EasyEUICC for downloads. Step-by-step and the full diagnosis:
 [`removable-euicc-native-setup.md`](removable-euicc-native-setup.md).
 
 ## Key device facts to re-verify
